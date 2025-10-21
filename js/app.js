@@ -1,80 +1,99 @@
-// Mock data for the 3D models
-const models = [
-    {
-        id: 1,
-        name: 'Sci-Fi Helmet',
-        price: 49.99,
-        image: 'https://via.placeholder.com/600x400.png?text=Sci-Fi+Helmet',
-        artist: 'Alex Volkov',
-        rating: 4.8,
-        category: 'Sci-Fi',
-        fileType: 'FBX',
-    },
-    {
-        id: 2,
-        name: 'Medieval Castle',
-        price: 99.99,
-        image: 'https://via.placeholder.com/600x400.png?text=Medieval+Castle',
-        artist: 'Isabelle Chen',
-        rating: 4.9,
-        category: 'Architecture',
-        fileType: 'OBJ',
-    },
-    {
-        id: 3,
-        name: 'Dragon Figurine',
-        price: 79.99,
-        image: 'https://via.placeholder.com/600x400.png?text=Dragon+Figurine',
-        artist: 'David Lee',
-        rating: 4.7,
-        category: 'Fantasy',
-        fileType: 'STL',
-    },
-];
+const API_URL = 'http://localhost:5000/api';
 
-// Mock data for user profiles
-const users = [
-    {
-        id: 1,
-        name: 'Alex Volkov',
-        avatar: 'https://via.placeholder.com/150.png?text=Alex+Volkov',
-        email: 'alex.volkov@example.com',
-        bio: '3D artist specializing in sci-fi and hard-surface modeling.',
-        uploadedModels: [1],
-        sales: 125,
-        earnings: 5468.75,
-    },
-    {
-        id: 2,
-        name: 'Isabelle Chen',
-        avatar: 'https://via.placeholder.com/150.png?text=Isabelle+Chen',
-        email: 'isabelle.chen@example.com',
-        bio: 'Concept artist and 3D sculptor with a passion for fantasy creatures.',
-        uploadedModels: [2],
-        sales: 210,
-        earnings: 10498.80,
+async function fetchModels() {
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) {
+        headers['x-auth-token'] = token;
     }
-];
 
-// Mock data for admin dashboard
-const adminStats = {
-    totalSales: 335,
-    totalUsers: 2,
-    uploadedModels: 3,
-    platformRevenue: 15967.55,
-};
+    try {
+        const response = await fetch(`${API_URL}/models`, { headers });
+        if (!response.ok) {
+            console.error('Failed to fetch models, status:', response.status);
+            return [];
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching models:', error);
+        return [];
+    }
+}
 
-function renderFeaturedModels() {
+function handlePurchase() {
+    const buyNowButton = document.getElementById('buy-now-button');
+    if (buyNowButton) {
+        buyNowButton.addEventListener('click', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const modelId = params.get('id');
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('You must be logged in to purchase a model.');
+                return;
+            }
+
+            if (!modelId) {
+                alert('Could not find model ID.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/purchase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify({ modelId })
+                });
+
+                if (response.ok) {
+                    alert('Purchase successful!');
+                } else {
+                    const errorData = await response.json();
+                    alert(`Purchase failed: ${errorData.message || 'Server error'}`);
+                }
+            } catch (error) {
+                console.error('Error during purchase:', error);
+                alert('An error occurred during the purchase process.');
+            }
+        });
+    }
+}
+
+async function fetchUsers() {
+    try {
+        const response = await fetch(`${API_URL}/users`);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+    }
+}
+
+async function fetchUser(id) {
+    try {
+        const response = await fetch(`${API_URL}/users/${id}`);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return null;
+    }
+}
+
+async function renderFeaturedModels() {
     const modelGrid = document.querySelector('.mb-16 .grid');
     if (modelGrid) {
+        const models = await fetchModels();
         models.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.className = 'bg-brand-surface rounded-lg overflow-hidden';
             modelCard.innerHTML = `
-                <img src="${model.image}" alt="${model.name}" class="w-full h-64 object-cover">
+                <img src="https://via.placeholder.com/600x400.png?text=${model.name}" alt="${model.name}" class="w-full h-64 object-cover">
                 <div class="p-6">
                     <h3 class="text-xl font-bold">${model.name}</h3>
-                    <p class="text-gray-400">${model.artist}</p>
+                    <p class="text-gray-400">${model.user ? model.user.name : 'Unknown Artist'}</p>
                     <p class="text-lg font-bold mt-4">$${model.price}</p>
                 </div>
             `;
@@ -83,35 +102,37 @@ function renderFeaturedModels() {
     }
 }
 
-function renderTrendingArtists() {
+async function renderTrendingArtists() {
     const artistGrid = document.querySelectorAll('.mb-16 .grid')[1];
     if (artistGrid) {
+        const users = await fetchUsers();
         users.forEach(user => {
             const artistCard = document.createElement('div');
             artistCard.className = 'bg-brand-surface rounded-lg p-6 text-center';
             artistCard.innerHTML = `
-                <img src="${user.avatar}" alt="${user.name}" class="w-24 h-24 rounded-full mx-auto mb-4">
+                <img src="https://via.placeholder.com/150.png?text=${user.name}" alt="${user.name}" class="w-24 h-24 rounded-full mx-auto mb-4">
                 <h3 class="text-xl font-bold">${user.name}</h3>
-                <p class="text-gray-400">${user.bio}</p>
+                <p class="text-gray-400">${user.bio || 'No bio available'}</p>
             `;
             artistGrid.appendChild(artistCard);
         });
     }
 }
 
-function renderMarketplaceModels(filteredModels = models) {
-    const modelGrid = document.querySelector('.w-3\\/4 .grid');
+async function renderMarketplaceModels(filteredModels) {
+    const modelGrid = document.getElementById('model-grid');
     if (modelGrid) {
+        const models = filteredModels || await fetchModels();
         modelGrid.innerHTML = ''; // Clear existing models
-        filteredModels.forEach(model => {
+        models.forEach(model => {
             const modelCard = document.createElement('div');
             modelCard.className = 'bg-brand-surface rounded-lg overflow-hidden';
             modelCard.innerHTML = `
-                <a href="product.html?id=${model.id}">
-                    <img src="${model.image}" alt="${model.name}" class="w-full h-64 object-cover">
+                <a href="product.html?id=${model._id}">
+                    <img src="https://via.placeholder.com/600x400.png?text=${model.name}" alt="${model.name}" class="w-full h-64 object-cover">
                     <div class="p-6">
                         <h3 class="text-xl font-bold">${model.name}</h3>
-                        <p class="text-gray-400">${model.artist}</p>
+                        <p class="text-gray-400">${model.user ? model.user.name : 'Unknown Artist'}</p>
                         <p class="text-lg font-bold mt-4">$${model.price}</p>
                     </div>
                 </a>
@@ -121,7 +142,7 @@ function renderMarketplaceModels(filteredModels = models) {
     }
 }
 
-function setupFilters() {
+async function setupFilters() {
     const categoryFilter = document.getElementById('category-filter');
     const fileTypeFilter = document.getElementById('file-type-filter');
     const priceFilter = document.getElementById('price-filter');
@@ -129,6 +150,7 @@ function setupFilters() {
     const sortByFilter = document.getElementById('sort-by-filter');
 
     if (categoryFilter) {
+        const models = await fetchModels();
         const applyFilters = () => {
             let filteredModels = [...models];
 
@@ -139,7 +161,7 @@ function setupFilters() {
 
             // File type filter
             if (fileTypeFilter.value !== 'all') {
-                filteredModels = filteredModels.filter(model => model.fileType.toLowerCase() === fileTypeFilter.value);
+                filteredModels = filteredModels.filter(model => model.files.some(f => f.toLowerCase().endsWith(fileTypeFilter.value)));
             }
 
             // Price filter
@@ -154,7 +176,6 @@ function setupFilters() {
                 case 'price-desc':
                     filteredModels.sort((a, b) => b.price - a.price);
                     break;
-                // Add more sorting options here, e.g., popularity, newest
             }
 
             renderMarketplaceModels(filteredModels);
@@ -167,152 +188,228 @@ function setupFilters() {
     }
 }
 
-function renderProductPage() {
+async function renderProductPage() {
     const params = new URLSearchParams(window.location.search);
-    const modelId = parseInt(params.get('id'), 10);
+    const modelId = params.get('id');
 
     if (modelId) {
-        const model = models.find(m => m.id === modelId);
-        const seller = users.find(u => u.name === model.artist);
+        const response = await fetch(`${API_URL}/models/${modelId}`);
+        const model = await response.json();
+
+        const seller = await fetchUser(model.user);
 
         if (model && seller) {
             // Populate model details
             document.getElementById('model-name').textContent = model.name;
             document.getElementById('model-price').textContent = `$${model.price}`;
-            document.getElementById('model-description').textContent = `A detailed ${model.name} model, perfect for your next project. Category: ${model.category}. File Type: ${model.fileType}.`;
+            document.getElementById('model-description').textContent = model.description;
 
             // Populate seller details
             document.getElementById('seller-name').textContent = seller.name;
-            document.getElementById('seller-avatar').src = seller.avatar;
+            document.getElementById('seller-avatar').src = `https://via.placeholder.com/150.png?text=${seller.name}`;
             document.getElementById('seller-avatar').alt = seller.name;
 
             // Populate main model viewer image
-            document.getElementById('main-model-image').src = model.image;
+            document.getElementById('main-model-image').src = `https://via.placeholder.com/600x400.png?text=${model.name}`;
             document.getElementById('main-model-image').alt = model.name;
+        }
+    }
+}
 
-            // Render related models
-            const relatedModels = models.filter(m => m.category === model.category && m.id !== model.id);
-            const relatedGrid = document.querySelector('.mt-16 .grid');
-            if (relatedGrid) {
-                relatedGrid.innerHTML = '';
-                relatedModels.forEach(relatedModel => {
-                    const modelCard = document.createElement('div');
-                    modelCard.className = 'bg-brand-surface rounded-lg overflow-hidden';
-                    modelCard.innerHTML = `
-                        <a href="product.html?id=${relatedModel.id}">
-                            <img src="${relatedModel.image}" alt="${relatedModel.name}" class="w-full h-64 object-cover">
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold">${relatedModel.name}</h3>
-                                <p class="text-gray-400">${relatedModel.artist}</p>
-                                <p class="text-lg font-bold mt-4">$${relatedModel.price}</p>
-                            </div>
-                        </a>
+function handleUploadForm() {
+    const uploadForm = document.getElementById('upload-form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to upload a model.');
+                return;
+            }
+
+            const formData = new FormData(uploadForm);
+            const data = {
+                name: formData.get('name'),
+                description: formData.get('description'),
+                price: parseFloat(formData.get('price')),
+                category: formData.get('category'),
+                tags: formData.get('tags').split(',').map(tag => tag.trim()),
+                // Since this is a prototype, we send placeholder file names
+                files: ['model.fbx', 'texture.png']
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/models`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Model uploaded successfully!');
+                    uploadForm.reset();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Upload failed: ${errorData.errors ? errorData.errors[0].msg : 'Server error'}`);
+                }
+            } catch (error) {
+                console.error('Error uploading model:', error);
+                alert('An error occurred while uploading the model.');
+            }
+        });
+    }
+}
+
+async function renderUserProfile() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        const response = await fetch(`${API_URL}/auth/me`, {
+            headers: { 'x-auth-token': token }
+        });
+        const user = await response.json();
+
+        if (user) {
+            // Populate user info
+            document.getElementById('user-avatar').src = `https://via.placeholder.com/150.png?text=${user.name}`;
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-bio').textContent = user.bio || 'No bio available';
+        }
+    }
+}
+
+async function renderAdminDashboard() {
+    const pageTitle = document.querySelector('title');
+    if (pageTitle && pageTitle.textContent.includes('Admin')) {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const response = await fetch(`${API_URL}/admin/stats`, {
+                headers: { 'x-auth-token': token }
+            });
+            const stats = await response.json();
+
+            // Populate overview cards
+            document.getElementById('total-sales').textContent = stats.totalSales;
+            document.getElementById('total-users').textContent = stats.totalUsers;
+            document.getElementById('uploaded-models').textContent = stats.totalModels;
+            document.getElementById('platform-revenue').textContent = `$${stats.totalRevenue.toLocaleString()}`;
+
+            // Fetch and populate users table
+            const usersResponse = await fetch(`${API_URL}/admin/users`, {
+                headers: { 'x-auth-token': token }
+            });
+            const users = await usersResponse.json();
+            const usersTableBody = document.getElementById('users-table-body');
+            if (usersTableBody) {
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-700';
+                    row.innerHTML = `
+                        <td class="p-4">${user.name}</td>
+                        <td class="p-4">${user.email}</td>
+                        <td class="p-4">${user.sales || 0}</td>
+                        <td class="p-4">
+                            <button data-user-id="${user._id}" class="text-red-500 hover:underline delete-user-button">Delete</button>
+                        </td>
                     `;
-                    relatedGrid.appendChild(modelCard);
+                    usersTableBody.appendChild(row);
+                });
+
+                // Add event listeners for the new delete buttons
+                document.querySelectorAll('.delete-user-button').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const userId = e.target.getAttribute('data-user-id');
+                        if (confirm('Are you sure you want to delete this user?')) {
+                            const token = localStorage.getItem('token');
+                            const response = await fetch(`${API_URL}/admin/users/${userId}`, {
+                                method: 'DELETE',
+                                headers: { 'x-auth-token': token }
+                            });
+
+                            if (response.ok) {
+                                alert('User deleted successfully.');
+                                renderAdminDashboard(); // Refresh the dashboard
+                            } else {
+                                alert('Failed to delete user.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // Fetch and populate models table
+            const modelsResponse = await fetch(`${API_URL}/admin/models`, {
+                headers: { 'x-auth-token': token }
+            });
+            const models = await modelsResponse.json();
+            const modelsTableBody = document.getElementById('models-table-body');
+            if (modelsTableBody) {
+                models.forEach(model => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-700';
+                    row.innerHTML = `
+                        <td class="p-4">${model.name}</td>
+                        <td class="p-4">${model.user.name}</td>
+                        <td class="p-4">$${model.price}</td>
+                        <td class="p-4">
+                            <button data-model-id="${model._id}" class="text-red-500 hover:underline delete-model-button">Remove</button>
+                        </td>
+                    `;
+                    modelsTableBody.appendChild(row);
+                });
+
+                // Add event listeners for the new delete buttons
+                document.querySelectorAll('.delete-model-button').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const modelId = e.target.getAttribute('data-model-id');
+                        if (confirm('Are you sure you want to remove this model?')) {
+                            const token = localStorage.getItem('token');
+                            const response = await fetch(`${API_URL}/admin/models/${modelId}`, {
+                                method: 'DELETE',
+                                headers: { 'x-auth-token': token }
+                            });
+
+                            if (response.ok) {
+                                alert('Model removed successfully.');
+                                renderAdminDashboard(); // Refresh the dashboard
+                            } else {
+                                alert('Failed to remove model.');
+                            }
+                        }
+                    });
                 });
             }
         }
     }
 }
 
-function renderUserProfile() {
-    // For the prototype, we'll just display the first user's profile.
-    const user = users[0];
-
-    if (user) {
-        // Populate user info
-        document.getElementById('user-avatar').src = user.avatar;
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('user-email').textContent = user.email;
-        document.getElementById('user-bio').textContent = user.bio;
-
-        // Populate sales stats
-        document.getElementById('total-sales').textContent = user.sales;
-        document.getElementById('total-earnings').textContent = `$${user.earnings.toLocaleString()}`;
-
-        // Populate uploaded models
-        const uploadedModelsGrid = document.querySelector('section:last-of-type .grid');
-        if (uploadedModelsGrid) {
-            const userModels = models.filter(model => user.uploadedModels.includes(model.id));
-            userModels.forEach(model => {
-                const modelCard = document.createElement('div');
-                modelCard.className = 'bg-brand-surface rounded-lg overflow-hidden';
-                modelCard.innerHTML = `
-                    <a href="product.html?id=${model.id}">
-                        <img src="${model.image}" alt="${model.name}" class="w-full h-64 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold">${model.name}</h3>
-                            <p class="text-lg font-bold mt-4">$${model.price}</p>
-                        </div>
-                    </a>
-                `;
-                uploadedModelsGrid.appendChild(modelCard);
-            });
-        }
-    }
-}
-
-
-function renderAdminDashboard() {
-    const pageTitle = document.querySelector('title');
-    if (pageTitle && pageTitle.textContent.includes('Admin')) {
-        // Populate overview cards
-        document.getElementById('total-sales').textContent = adminStats.totalSales;
-        document.getElementById('total-users').textContent = adminStats.totalUsers;
-        document.getElementById('uploaded-models').textContent = adminStats.uploadedModels;
-        document.getElementById('platform-revenue').textContent = `$${adminStats.platformRevenue.toLocaleString()}`;
-
-        // Populate users table
-        const usersTableBody = document.getElementById('users-table-body');
-        if (usersTableBody) {
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-gray-700';
-                row.innerHTML = `
-                    <td class="p-4">${user.name}</td>
-                    <td class="p-4">${user.email}</td>
-                    <td class="p-4">${user.sales}</td>
-                    <td class="p-4">
-                        <button class="text-blue-500 hover:underline mr-4">View</button>
-                        <button class="text-red-500 hover:underline">Delete</button>
-                    </td>
-                `;
-                usersTableBody.appendChild(row);
-            });
-        }
-
-        // Populate models table
-        const modelsTableBody = document.getElementById('models-table-body');
-        if (modelsTableBody) {
-            models.forEach(model => {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-gray-700';
-                row.innerHTML = `
-                    <td class="p-4">${model.name}</td>
-                    <td class="p-4">${model.artist}</td>
-                    <td class="p-4">$${model.price}</td>
-                    <td class="p-4">
-                        <button class="text-green-500 hover:underline mr-4">Approve</button>
-                        <button class="text-yellow-500 hover:underline mr-4">Reject</button>
-                        <button class="text-red-500 hover:underline">Remove</button>
-                    </td>
-                `;
-                modelsTableBody.appendChild(row);
-            });
-        }
-    }
-}
-
-
-function handleUploadForm() {
-    const uploadForm = document.getElementById('upload-form');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', (e) => {
+function handleLoginForm() {
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const modelName = document.getElementById('model-name').value;
-            if (modelName) {
-                alert(`"${modelName}" has been successfully submitted for review!`);
-                uploadForm.reset();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                // Visually confirm login by hiding the form and showing content
+                loginForm.style.display = 'none';
+                // Re-render the models now that the user is authenticated
+                renderMarketplaceModels();
+            } else {
+                alert('Invalid credentials');
             }
         });
     }
@@ -327,10 +424,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderFeaturedModels();
         renderTrendingArtists();
     } else if (pageTitle.includes('Marketplace')) {
-        renderMarketplaceModels();
         setupFilters();
+        handleLoginForm();
     } else if (pageTitle.includes('Product')) {
         renderProductPage();
+        handlePurchase();
     } else if (pageTitle.includes('Upload')) {
         handleUploadForm();
     } else if (pageTitle.includes('Profile')) {
