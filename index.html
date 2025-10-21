@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Market Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#00aaff',
+                        'brand-dark': '#1a1a1a',
+                        'brand-surface': '#2c2c2c',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-white font-sans">
+    <header class="bg-brand-surface border-b border-gray-700">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">3DMP</a>
+            <ul class="flex items-center space-x-6">
+                <li><a href="marketplace.html" class="hover:text-brand-blue">Marketplace</a></li>
+                <li><a href="upload.html" class="hover:text-brand-blue">Upload</a></li>
+                <li><a href="profile.html" class="hover:text-brand-blue">Profile</a></li>
+                <li><a href="admin.html" class="hover:text-brand-blue">Admin</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <button class="border border-brand-blue text-brand-blue px-4 py-2 rounded hover:bg-brand-blue hover:text-white transition">Login</button>
+                <button class="bg-brand-blue text-white px-4 py-2 rounded hover:bg-blue-600 transition">Register</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center mb-16">
+            <h1 class="text-5xl font-bold mb-4">High-Quality 3D Models for Your Creative Projects</h1>
+            <p class="text-lg text-gray-400 mb-8">Discover a universe of 3D assets from talented artists around the world.</p>
+            <a href="marketplace.html" class="bg-brand-blue text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-600 transition">Browse Models</a>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Featured Models</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Model cards will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Trending Artists</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Artist cards will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <section class="bg-brand-surface p-12 rounded-lg text-center">
+            <h2 class="text-3xl font-bold mb-4">Join Our Community of Artists</h2>
+            <p class="text-lg text-gray-400 mb-8">Showcase your work, connect with fellow creators, and earn money from your passion. We provide the tools and the platform; you bring the art.</p>
+            <a href="upload.html" class="bg-brand-blue text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-600 transition">Start Selling</a>
+        </section>
+    </main>
+
+    <footer class="bg-brand-surface border-t border-gray-700 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-white">About</a>
+                <a href="#" class="hover:text-white">Contact</a>
+                <a href="#" class="hover:text-white">Terms of Service</a>
+                <a href="#" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p>&copy; 2023 3D Market Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

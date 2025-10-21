@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - 3D Market Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#00aaff',
+                        'brand-dark': '#1a1a1a',
+                        'brand-surface': '#2c2c2c',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-white font-sans">
+    <header class="bg-brand-surface border-b border-gray-700">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">3DMP</a>
+            <ul class="flex items-center space-x-6">
+                <li><a href="marketplace.html" class="hover:text-brand-blue">Marketplace</a></li>
+                <li><a href="upload.html" class="hover:text-brand-blue">Upload</a></li>
+                <li><a href="profile.html" class="hover:text-brand-blue">Profile</a></li>
+                <li><a href="admin.html" class="hover:text-brand-blue">Admin</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <button class="border border-brand-blue text-brand-blue px-4 py-2 rounded hover:bg-brand-blue hover:text-white transition">Login</button>
+                <button class="bg-brand-blue text-white px-4 py-2 rounded hover:bg-blue-600 transition">Register</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="bg-brand-surface p-6 rounded-lg">
+                <h3 class="text-gray-400 mb-2">Total Sales</h3>
+                <p id="total-sales" class="text-3xl font-bold">0</p>
+            </div>
+            <div class="bg-brand-surface p-6 rounded-lg">
+                <h3 class="text-gray-400 mb-2">Total Users</h3>
+                <p id="total-users" class="text-3xl font-bold">0</p>
+            </div>
+            <div class="bg-brand-surface p-6 rounded-lg">
+                <h3 class="text-gray-400 mb-2">Uploaded Models</h3>
+                <p id="uploaded-models" class="text-3xl font-bold">0</p>
+            </div>
+            <div class="bg-brand-surface p-6 rounded-lg">
+                <h3 class="text-gray-400 mb-2">Platform Revenue</h3>
+                <p id="platform-revenue" class="text-3xl font-bold">$0.00</p>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Manage Users</h2>
+            <div class="bg-brand-surface rounded-lg overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-700">
+                            <th class="p-4">User</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4">Sales</th>
+                            <th class="p-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <!-- User rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold mb-6">Manage Models</h2>
+            <div class="bg-brand-surface rounded-lg overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-700">
+                            <th class="p-4">Model</th>
+                            <th class="p-4">Artist</th>
+                            <th class="p-4">Price</th>
+                            <th class="p-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="models-table-body">
+                        <!-- Model rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-brand-surface border-t border-gray-700 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-white">About</a>
+                <a href="#" class="hover:text-white">Contact</a>
+                <a href="#" class="hover:text-white">Terms of Service</a>
+                <a href="#" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p>&copy; 2023 3D Market Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

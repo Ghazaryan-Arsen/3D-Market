@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - 3D Market Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#00aaff',
+                        'brand-dark': '#1a1a1a',
+                        'brand-surface': '#2c2c2c',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-dark text-white font-sans">
+    <header class="bg-brand-surface border-b border-gray-700">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold">3DMP</a>
+            <ul class="flex items-center space-x-6">
+                <li><a href="marketplace.html" class="hover:text-brand-blue">Marketplace</a></li>
+                <li><a href="upload.html" class="hover:text-brand-blue">Upload</a></li>
+                <li><a href="profile.html" class="hover:text-brand-blue">Profile</a></li>
+                <li><a href="admin.html" class="hover:text-brand-blue">Admin</a></li>
+            </ul>
+            <div class="flex items-center space-x-4">
+                <button class="border border-brand-blue text-brand-blue px-4 py-2 rounded hover:bg-brand-blue hover:text-white transition">Login</button>
+                <button class="bg-brand-blue text-white px-4 py-2 rounded hover:bg-blue-600 transition">Register</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 flex gap-8">
+        <aside class="w-1/4">
+            <div class="bg-brand-surface p-6 rounded-lg">
+                <h2 class="text-2xl font-bold mb-6">Filters</h2>
+                <div class="mb-6">
+                    <label for="category-filter" class="block mb-2">Category</label>
+                    <select id="category-filter" class="w-full bg-gray-800 border border-gray-700 rounded p-2">
+                        <option value="all">All</option>
+                        <option value="sci-fi">Sci-Fi</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="architecture">Architecture</option>
+                        <option value="characters">Characters</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label for="file-type-filter" class="block mb-2">File Type</label>
+                    <select id="file-type-filter" class="w-full bg-gray-800 border border-gray-700 rounded p-2">
+                        <option value="all">All</option>
+                        <option value="fbx">FBX</option>
+                        <option value="obj">OBJ</option>
+                        <option value="stl">STL</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label for="price-filter" class="block mb-2">Price Range</label>
+                    <input type="range" id="price-filter" min="0" max="200" value="200" class="w-full">
+                    <span id="price-value" class="text-gray-400">$200</span>
+                </div>
+                <div>
+                    <label for="sort-by-filter" class="block mb-2">Sort By</label>
+                    <select id="sort-by-filter" class="w-full bg-gray-800 border border-gray-700 rounded p-2">
+                        <option value="popularity">Popularity</option>
+                        <option value="newest">Newest</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <section class="w-3/4">
+            <div class="mb-8">
+                <input type="text" placeholder="Search for models..." class="w-full bg-brand-surface border border-gray-700 rounded-lg p-4">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Models will be dynamically inserted here -->
+            </div>
+            <div class="flex justify-center mt-8">
+                <a href="#" class="bg-brand-surface px-4 py-2 rounded-l-lg hover:bg-gray-700">&laquo;</a>
+                <a href="#" class="bg-brand-blue px-4 py-2 hover:bg-blue-600">1</a>
+                <a href="#" class="bg-brand-surface px-4 py-2 hover:bg-gray-700">2</a>
+                <a href="#" class="bg-brand-surface px-4 py-2 hover:bg-gray-700">3</a>
+                <a href="#" class="bg-brand-surface px-4 py-2 rounded-r-lg hover:bg-gray-700">&raquo;</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-brand-surface border-t border-gray-700 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-white">About</a>
+                <a href="#" class="hover:text-white">Contact</a>
+                <a href="#" class="hover:text-white">Terms of Service</a>
+                <a href="#" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p>&copy; 2023 3D Market Platform. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
