@@ -1,5 +1,16 @@
 const API_URL = 'http://localhost:5000/api';
 
+function handleMobileMenu() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+}
+
 async function fetchModels() {
     const token = localStorage.getItem('token');
     const headers = {};
@@ -417,6 +428,8 @@ function handleLoginForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('3D Market Platform initialized.');
+
+    handleMobileMenu();
 
     const pageTitle = document.querySelector('title').textContent;
 

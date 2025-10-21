@@ -23,45 +23,58 @@
     <header class="bg-brand-surface border-b border-gray-700">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold">3DMP</a>
-            <ul class="flex items-center space-x-6">
-                <li><a href="marketplace.html" class="hover:text-brand-blue">Marketplace</a></li>
-                <li><a href="upload.html" class="hover:text-brand-blue">Upload</a></li>
-                <li><a href="profile.html" class="hover:text-brand-blue">Profile</a></li>
-                <li><a href="admin.html" class="hover:text-brand-blue">Admin</a></li>
-            </ul>
-            <div class="flex items-center space-x-4">
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="marketplace.html" class="hover:text-brand-blue">Marketplace</a>
+                <a href="upload.html" class="hover:text-brand-blue">Upload</a>
+                <a href="profile.html" class="hover:text-brand-blue">Profile</a>
+                <a href="admin.html" class="hover:text-brand-blue">Admin</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
                 <button class="border border-brand-blue text-brand-blue px-4 py-2 rounded hover:bg-brand-blue hover:text-white transition">Login</button>
                 <button class="bg-brand-blue text-white px-4 py-2 rounded hover:bg-blue-600 transition">Register</button>
             </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
         </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="marketplace.html" class="block py-2 px-4 text-sm hover:bg-gray-700">Marketplace</a>
+            <a href="upload.html" class="block py-2 px-4 text-sm hover:bg-gray-700">Upload</a>
+            <a href="profile.html" class="block py-2 px-4 text-sm hover:bg-gray-700">Profile</a>
+            <a href="admin.html" class="block py-2 px-4 text-sm hover:bg-gray-700">Admin</a>
+        </div>
     </header>
 
     <main class="container mx-auto px-6 py-12">
-        <section class="flex items-center justify-between mb-12">
-            <div class="flex items-center">
-                <img id="user-avatar" src="images/alex.jpg" alt="User Avatar" class="w-32 h-32 rounded-full mr-8">
+        <section class="flex flex-col md:flex-row items-center justify-between mb-12">
+            <div class="flex flex-col md:flex-row items-center text-center md:text-left">
+                <img id="user-avatar" src="images/alex.jpg" alt="User Avatar" class="w-32 h-32 rounded-full mb-4 md:mb-0 md:mr-8">
                 <div>
-                    <h1 id="user-name" class="text-4xl font-bold">Alex Volkov</h1>
+                    <h1 id="user-name" class="text-3xl md:text-4xl font-bold">Alex Volkov</h1>
                     <p id="user-email" class="text-gray-400">alex.volkov@example.com</p>
                     <p id="user-bio" class="mt-4 max-w-xl">3D artist specializing in sci-fi and hard-surface modeling.</p>
                 </div>
             </div>
-            <button class="bg-brand-blue text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-600 transition">Edit Profile</button>
+            <button class="bg-brand-blue text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-600 transition mt-6 md:mt-0">Edit Profile</button>
         </section>
 
-        <section class="bg-brand-surface p-8 rounded-lg mb-12">
-            <h2 class="text-2xl font-bold mb-6">Sales Stats</h2>
+        <section class="bg-brand-surface p-6 md:p-8 rounded-lg mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-center md:text-left">Sales Stats</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div>
-                    <p class="text-4xl font-bold" id="total-sales">125</p>
+                <div class="mb-4 md:mb-0">
+                    <p class="text-3xl md:text-4xl font-bold" id="total-sales">125</p>
                     <p class="text-gray-400">Total Sales</p>
                 </div>
-                <div>
-                    <p class="text-4xl font-bold" id="total-earnings">$5,468.75</p>
+                <div class="mb-4 md:mb-0">
+                    <p class="text-3xl md:text-4xl font-bold" id="total-earnings">$5,468.75</p>
                     <p class="text-gray-400">Total Earnings</p>
                 </div>
                 <div>
-                    <button class="bg-green-500 text-white px-8 py-4 rounded-lg font-bold hover:bg-green-600 transition">Withdraw Earnings</button>
+                    <button class="bg-green-500 text-white px-8 py-3 md:py-4 rounded-lg font-bold hover:bg-green-600 transition w-full md:w-auto">Withdraw Earnings</button>
                 </div>
             </div>
         </section>
@@ -76,7 +89,7 @@
 
     <footer class="bg-brand-surface border-t border-gray-700 mt-16">
         <div class="container mx-auto px-6 py-8 text-center text-gray-400">
-            <div class="flex justify-center space-x-6 mb-4">
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6 mb-4">
                 <a href="#" class="hover:text-white">About</a>
                 <a href="#" class="hover:text-white">Contact</a>
                 <a href="#" class="hover:text-white">Terms of Service</a>
